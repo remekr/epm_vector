@@ -1,11 +1,3 @@
-#include "Vector.h"
+#include "vector.h"
 
-namespace epam
-{
-	
-int Vector::getI() const
-{ 
-	return i; 
-}
-
-}
+namespace epam {}
