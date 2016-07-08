@@ -1,10 +1,33 @@
+#include <iostream>
 #include "gtest/gtest.h"
 
-TEST(t1, t) {
-    EXPECT_EQ(1, 1);
-}
 
-int main (int argc, char** argv) {
+class VectorTests : public ::testing::Test { 
+public: 
+   VectorTests() 
+   {
+	   
+   } 
+ 
+   void SetUp() 
+   { 
+   }
+ 
+   void TearDown() 
+   { 
+   
+   }
+ 
+   ~VectorTests()  
+   {   
+       
+   }
+};
+
+
+
+int main (int argc, char** argv) 
+{
     ::testing::InitGoogleTest(&argc, argv);
 
     int returnValue;
