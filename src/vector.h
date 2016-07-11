@@ -2,6 +2,7 @@
 
 #include <cstdlib>
 #include <iostream>
+#include <stdexcept>
 
 namespace epam
 {
@@ -18,7 +19,9 @@ class Vector
     void pop_back();
 
     // getters
-    const T& operator[](size_t n) { return memory[n]; }
+    T& operator[](size_t n) const { return memory[n]; }
+    T& at(const int index) const;
+    T& front() const;
 
     // capacity
     size_t getSize() const;
@@ -34,7 +37,7 @@ class Vector
 
   private:
     size_t capacity;
-    size_t size;
+    int size;
     static const size_t increasingFactor = 2;
 
     T* memory;
@@ -51,6 +54,30 @@ bool Vector<T>::empty() const
 }
 template <typename T>
 size_t Vector<T>::getCapacity() const { return capacity; }
+
+template <typename T>
+T& Vector<T>::at(const int index) const
+{
+    if (index < 0 || (index > size - 1))
+    {
+        throw std::out_of_range("Given index is out of bounds");
+    }
+    return memory[index];
+}
+
+template <typename T>
+T& Vector<T>::front() const
+{
+    if (size > 0)
+    {
+        return *memory;
+    }
+    else
+    {
+        throw std::out_of_range("Given index is out of bounds");
+    }
+}
+
 template <typename T>
 void Vector<T>::resize(const size_t n)
 {

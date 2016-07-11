@@ -1,9 +1,9 @@
 CC=g++
 CFLAGS=-c -std=c++11 -Wall -Werror
 
-all: vector run tests memory format
+all: vector memory format
 
-run: vector format
+run: vector
 
 vector: main.o vector.o
 	$(CC) main.o vector.o -o bin/vector
@@ -23,7 +23,7 @@ fixture: vector_ut.o
 vector_ut.o: src/ut/vector.cpp
 	$(CC) -std=c++11 -I/media/sf_Bench/googletest-release-1.7.0/include -pthread src/ut/vector.cpp /media/sf_Bench/googletest-release-1.7.0/make/gtest_main.a vector.o -o bin/tests
 
-memory: vector fixture
+memory: vector
 	valgrind --tool=memcheck bin/tests
 
 run:
