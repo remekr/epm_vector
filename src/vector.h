@@ -3,11 +3,13 @@
 #include <cstdlib>
 #include <iostream>
 
-namespace epam {
+namespace epam
+{
 
 template <typename T>
-class Vector {
-   public:
+class Vector
+{
+  public:
     Vector() : capacity(10), size(0) { memory = new T[10]; };
     ~Vector() { delete[] memory; }
 
@@ -30,7 +32,7 @@ class Vector {
     typedef T& reference;
     typedef const T& constReference;
 
-   private:
+  private:
     size_t capacity;
     size_t size;
     static const size_t increasingFactor = 2;
@@ -40,56 +42,69 @@ class Vector {
 
 // capacity related
 template <typename T>
-size_t Vector<T>::getSize() const {
-    return size;
-}
+size_t Vector<T>::getSize() const { return size; }
 
 template <typename T>
-bool Vector<T>::empty() const {
+bool Vector<T>::empty() const
+{
     return size == 0 ? true : false;
 }
 template <typename T>
-size_t Vector<T>::getCapacity() const {
-    return capacity;
-}
+size_t Vector<T>::getCapacity() const { return capacity; }
 template <typename T>
-void Vector<T>::resize(const size_t n) {
-    if (n == capacity) {
+void Vector<T>::resize(const size_t n)
+{
+    if (n == capacity)
+    {
         return;
     }
-    if (n < capacity) {
-        if (size > capacity) {
-            for (auto i = n; i < size; ++i) {
+    if (n < capacity)
+    {
+        if (size > capacity)
+        {
+            for (auto i = n; i < size; ++i)
+            {
                 delete (memory + i);
             }
             size = n;
             capacity = n;
             // TODO? memory between 'n' and 'capacity' unfreed
-        } else {
+        }
+        else
+        {
             capacity = n;
             // TODO? memory between 'n' and 'capacity' unfreed
         }
-    } else {
+    }
+    else
+    {
         auto newMemory = new T[n];
-        for (auto i = 0u; i < size; ++i) {
+        for (auto i = 0u; i < size; ++i)
+        {
             newMemory[i] = memory[i];
         }
         delete[] memory;
         memory = newMemory;
         capacity = n;
     }
-    if (size > capacity) {
+    if (size > capacity)
+    {
         size = capacity;
     }
 }
 
 template <typename T>
-void Vector<T>::push_back(const T element) {
-    if (capacity > size) {
+void Vector<T>::push_back(const T element)
+{
+    if (capacity > size)
+    {
         memory[size++] = element;
-    } else {
+    }
+    else
+    {
         auto newMemory = new T[increasingFactor * capacity];
-        for (auto i = 0u; i < size; ++i) {
+        for (auto i = 0u; i < size; ++i)
+        {
             newMemory[i] = memory[i];
         }
         capacity = increasingFactor * capacity;
@@ -98,7 +113,8 @@ void Vector<T>::push_back(const T element) {
 }
 
 template <typename T>
-void Vector<T>::pop_back() {
+void Vector<T>::pop_back()
+{
     if (size == 0)
         return;
     else

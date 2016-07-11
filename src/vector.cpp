@@ -1,3 +1,5 @@
 #include "vector.h"
 
-namespace epam {}
+namespace epam
+{
+}
