@@ -9,11 +9,11 @@ template <typename T>
 class Vector {
    public:
     Vector() : capacity(10), size(0) { memory = new T[10]; };
-    ~Vector() { /*delete[] memory;*/
-    }
+    ~Vector() { delete[] memory; }
 
     // modifiers
     void push_back(const T);
+    void pop_back();
 
     // getters
     const T& operator[](size_t n) { return memory[n]; }
@@ -33,6 +33,7 @@ class Vector {
    private:
     size_t capacity;
     size_t size;
+    static const size_t increasingFactor = 2;
 
     T* memory;
 };
@@ -63,10 +64,10 @@ void Vector<T>::resize(const size_t n) {
             }
             size = n;
             capacity = n;
-            // memory between 'n' and 'capacity' unfreed
+            // TODO? memory between 'n' and 'capacity' unfreed
         } else {
             capacity = n;
-            // memory between 'n' and 'capacity' unfreed
+            // TODO? memory between 'n' and 'capacity' unfreed
         }
     } else {
         auto newMemory = new T[n];
@@ -85,9 +86,22 @@ void Vector<T>::resize(const size_t n) {
 template <typename T>
 void Vector<T>::push_back(const T element) {
     if (capacity > size) {
-        memory[size] = element;
-        ++size;
-    } else {  // resize...
+        memory[size++] = element;
+    } else {
+        auto newMemory = new T[increasingFactor * capacity];
+        for (auto i = 0u; i < size; ++i) {
+            newMemory[i] = memory[i];
+        }
+        capacity = increasingFactor * capacity;
+        memory[size++] = element;
     }
+}
+
+template <typename T>
+void Vector<T>::pop_back() {
+    if (size == 0)
+        return;
+    else
+        --size;
 }
 };

@@ -110,7 +110,7 @@ TEST_F(VectorTests, CheckIfEmptyReturnsTrueWhenVectorIsReallyEmpty) {
     ASSERT_EQ(vector.empty(), true);
 }
 
-TEST_F(VectorTests, CheckIfEmptyReturnsTrueWhenVectorIsNotEmpty) {
+TEST_F(VectorTests, CheckIfEmptyReturnsFalseWhenVectorIsNotEmpty) {
     vector.push_back(0);
     ASSERT_EQ(vector.empty(), false);
 }
@@ -118,10 +118,8 @@ TEST_F(VectorTests, CheckIfEmptyReturnsTrueWhenVectorIsNotEmpty) {
 TEST_F(VectorTests, CheckIfEmptyReturnsTrueWhenVectorIsResizedToZero) {
     vector.push_back(0);
     vector.push_back(1);
-    ASSERT_EQ(vector.getCapacity(), 10);
-    ASSERT_EQ(vector.getSize(), 2);
-    // vector.resize(0);
-    //    ASSERT_EQ(vector.empty(), true);
+    vector.resize(0);
+    ASSERT_EQ(vector.empty(), true);
 }
 
 TEST_F(VectorTests, CheckIfValueTypeIsReturnedProperly) {
@@ -135,6 +133,33 @@ TEST_F(VectorTests, CheckIfReferenceTypeIsReturnedProperly) {
 TEST_F(VectorTests, CheckIfConstReferenceTypeIsReturnedProperly) {
     ::testing::StaticAssertTypeEq<const float&,
                                   Vector<float>::constReference>();
+}
+
+TEST_F(VectorTests, CheckIfOneElementIsRemoved) {
+    vector.push_back(5);
+    vector.pop_back();
+    ASSERT_EQ(vector.getSize(), 0);
+}
+
+TEST_F(VectorTests,
+       CheckIfVectorHasOneElementAfterPushingPopingAndPushinAgain) {
+    vector.push_back(5);
+    vector.pop_back();
+    vector.push_back(7);
+    ASSERT_EQ(vector.getSize(), 1);
+    ASSERT_EQ(vector[0], 7);
+}
+
+TEST_F(VectorTests, CheckIfPoppingElementDoesNotAffectCapacity) {
+    vector.push_back(5);
+    ASSERT_EQ(vector.getCapacity(), 10);
+    vector.pop_back();
+    ASSERT_EQ(vector.getCapacity(), 10);
+}
+
+TEST_F(VectorTests, CheckIfPopBackOnEmptyVectorDoesNothing) {
+    vector.pop_back();
+    ASSERT_EQ(vector.getSize(), 0);
 }
 
 int main(int argc, char** argv) {
