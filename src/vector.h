@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdlib>
+#include <iostream>
 
 namespace epam {
 
@@ -8,7 +9,8 @@ template <typename T>
 class Vector {
    public:
     Vector() : capacity(10), size(0) { memory = new T[10]; };
-    ~Vector() { delete[] memory; }
+    ~Vector() { /*delete[] memory;*/
+    }
 
     // modifiers
     void push_back(const T);
@@ -20,9 +22,13 @@ class Vector {
     size_t getSize() const;
     void resize(const size_t n);
     size_t getCapacity() const;
-    void empty();
+    bool empty() const;
     void reserve(const size_t n);
-    void shrink_to_fit();
+
+    // types
+    typedef T value;
+    typedef T& reference;
+    typedef const T& constReference;
 
    private:
     size_t capacity;
@@ -36,6 +42,11 @@ template <typename T>
 size_t Vector<T>::getSize() const {
     return size;
 }
+
+template <typename T>
+bool Vector<T>::empty() const {
+    return size == 0 ? true : false;
+}
 template <typename T>
 size_t Vector<T>::getCapacity() const {
     return capacity;
@@ -46,15 +57,25 @@ void Vector<T>::resize(const size_t n) {
         return;
     }
     if (n < capacity) {
-        capacity = n;
         if (size > capacity) {
-            for (auto i = capacity; i < size - 1; ++i) {
+            for (auto i = n; i < size; ++i) {
                 delete (memory + i);
             }
-            size = capacity;
+            size = n;
+            capacity = n;
+            // memory between 'n' and 'capacity' unfreed
+        } else {
+            capacity = n;
+            // memory between 'n' and 'capacity' unfreed
         }
     } else {
-        // extend - capacity??
+        auto newMemory = new T[n];
+        for (auto i = 0u; i < size; ++i) {
+            newMemory[i] = memory[i];
+        }
+        delete[] memory;
+        memory = newMemory;
+        capacity = n;
     }
     if (size > capacity) {
         size = capacity;
