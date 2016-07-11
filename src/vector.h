@@ -74,7 +74,20 @@ T& Vector<T>::front() const
     }
     else
     {
-        throw std::out_of_range("Given index is out of bounds");
+        throw std::out_of_range("");
+    }
+}
+
+template <typename T>
+T& Vector<T>::back() const
+{
+    if (size > 0)
+    {
+        return memory[size - 1];
+    }
+    else
+    {
+        throw std::out_of_range("");
     }
 }
 

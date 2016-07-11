@@ -192,6 +192,22 @@ TEST_F(VectorTests, CheckIfAtReturnsProperElements)
     ASSERT_EQ(vector.at(2), 79);
 }
 
+TEST_F(VectorTests, CheckIfFrontReturnsLastElement)
+{
+    vector.push_back(99);
+    vector.push_back(89);
+    vector.push_back(79);
+    ASSERT_EQ(vector.front(), 99);
+}
+
+TEST_F(VectorTests, CheckIfBackReturnsLastElement)
+{
+    vector.push_back(99);
+    vector.push_back(89);
+    vector.push_back(79);
+    ASSERT_EQ(vector.back(), 79);
+}
+
 TEST_F(VectorTests, CheckIfAtThrowsWhenIndexIsBelowBounds)
 {
     EXPECT_THROW(vector.at(-1), std::out_of_range);
