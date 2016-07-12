@@ -243,6 +243,27 @@ TEST_F(VectorTests, TryToUseIteratorsWithForEach)
     }
 }
 
+TEST_F(VectorTests, TryToUseConstIteratorsWithinFor)
+{
+    for (auto i = 0; i < 10; ++i)
+        vector.push_back(i);
+    auto i = 0;
+    for (auto it = vector.cbegin(); it != vector.cend(); ++it, ++i)
+    {
+        ASSERT_EQ(*it, i);
+    }
+}
+
+TEST_F(VectorTests, ConstructVectorUsingStdInitializersList)
+{
+    Vector<int> v{1, 2, 3, 4, 5};
+    auto i = 0;
+    for (auto it = vector.cbegin(); it != vector.cend(); ++it, ++i)
+    {
+        ASSERT_EQ(*it, i);
+    }
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

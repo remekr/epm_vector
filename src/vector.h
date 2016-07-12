@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
+#include <initializer_list>
 
 namespace epm
 {
@@ -16,6 +17,7 @@ class Vector
     {
         memory = new T[10];
     };
+    Vector(std::initializer_list<T> list);
     ~Vector()
     {
         delete[] memory;
@@ -76,6 +78,16 @@ class Vector
         {
             return this->ptr;
         }
+        iterator operator++()
+        {
+            this->ptr++;
+            return *this;
+        }
+        iterator operator--(int i)
+        {
+            this->ptr--;
+            return *this;
+        }
     };
     class const_iterator : public base_iterator
     {
@@ -123,7 +135,15 @@ class Vector
     T* memory;
 };
 
-// capacity related
+template <typename T>
+Vector<T>::Vector(std::initializer_list<T> list)
+{
+    memory = new T[list.size()];
+    auto i = 0;
+    for (auto e : list)
+        memory[i++] = e;
+}
+
 template <typename T>
 size_t Vector<T>::getSize() const
 {
