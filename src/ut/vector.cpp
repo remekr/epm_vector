@@ -218,7 +218,7 @@ TEST_F(VectorTests, CheckIfAtThrowsWhenIndexIsAboveBounds)
 TEST_F(VectorTests, GetIteratorToTheBeginAndCheckItsValue)
 {
     vector.push_back(11);
-    vector.push_back(11);
+    vector.push_back(12);
     auto begin = vector.begin();
     ASSERT_EQ(*begin, 11);
 }
@@ -241,15 +241,6 @@ TEST_F(VectorTests, TryToUseIteratorsWithForEach)
     {
         ASSERT_EQ(num, i++);
     }
-}
-
-TEST_F(VectorTests, CheckIfConstIteratorToBeginIsConst)
-{
-    vector.push_back(10);
-    Vector<int>::const_iterator cb = vector.cbegin();
-    //    ASSERT_TRUE(std::is_const<decltype(*cb)>::value);
-    *cb = 15;
-    ASSERT_EQ(vector[0], 15);
 }
 
 int main(int argc, char** argv)

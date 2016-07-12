@@ -21,20 +21,15 @@ class Vector
         delete[] memory;
     }
 
-    // modifiers
     void push_back(const T);
     void pop_back();
 
     // getters
-    T& operator[](size_t n) const
-    {
-        return memory[n];
-    }
+    T& operator[](size_t n) const;
     T& at(const int index) const;
     T& front() const;
     T& back() const;
 
-    // iterator
     typedef T value_type;
     typedef T& reference;
     typedef const T& const_reference;
@@ -89,11 +84,11 @@ class Vector
         {
             this->ptr = p;
         }
-        const reference operator*() const
+        const_reference operator*() const
         {
             return *(this->ptr);
         }
-        const pointer operator->()
+        const_pointer operator->() const
         {
             return this->ptr;
         }
@@ -157,6 +152,12 @@ T& Vector<T>::at(const int index) const
 }
 
 template <typename T>
+T& Vector<T>::operator[](size_t n) const
+{
+    return memory[n];
+}
+
+template <typename T>
 T& Vector<T>::front() const
 {
     if (size > 0)
@@ -174,7 +175,6 @@ T& Vector<T>::back() const
 {
     if (size > 0)
     {
-        std::cout << "operator*()";
         return memory[size - 1];
     }
     else
