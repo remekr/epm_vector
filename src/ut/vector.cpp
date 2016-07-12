@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include "gtest/gtest.h"
 #include "../vector.h"
 
@@ -145,7 +146,8 @@ TEST_F(VectorTests, CheckIfReferenceTypeIsReturnedProperly)
 
 TEST_F(VectorTests, CheckIfConstReferenceTypeIsReturnedProperly)
 {
-    ::testing::StaticAssertTypeEq<const float&, Vector<float>::const_reference>();
+    ::testing::StaticAssertTypeEq<const float&,
+                                  Vector<float>::const_reference>();
 }
 
 TEST_F(VectorTests, CheckIfOneElementIsRemoved)
@@ -265,13 +267,54 @@ TEST_F(VectorTests, TryToUseConstIteratorsWithinFor)
     }
 }
 
-TEST_F(VectorTests, ConstructVectorUsingStdInitializersList)
+TEST_F(VectorTests, ConstructUsingStdInitializersList)
 {
     Vector<int> v{1, 2, 3, 4, 5};
     auto i = 0;
     for (auto it = vector.cbegin(); it != vector.cend(); ++it, ++i)
     {
         ASSERT_EQ(*it, i);
+    }
+}
+
+TEST_F(VectorTests, ConstructVectorOfStrings)
+{
+    Vector<std::string> v;
+    v.push_back(std::string("1"));
+    v.push_back(std::string("2"));
+
+    ASSERT_EQ(v[0], "1");
+    ASSERT_EQ(v[1], "2");
+}
+
+TEST_F(VectorTests, ConstructUsingStdInitializersListAndReadByOrdinaryFor)
+{
+    Vector<int> v{1, 2, 3, 4, 5};
+    auto i = 0;
+    for (auto i = 0u; i < vector.getSize(); ++i)
+    {
+        ASSERT_EQ(vector[i], i);
+    }
+}
+
+TEST_F(VectorTests, ConstructUsingNumberOfElementsAndValue)
+{
+    Vector<int> v(5, 42);
+    ASSERT_EQ(v.getSize(), 5);
+    for (auto i = 0u; i < v.getSize(); ++i)
+    {
+        ASSERT_EQ(v[i], 42);
+    }
+}
+
+TEST_F(VectorTests, ConstructUsingCopyConstructorAndTrivialType)
+{
+    Vector<int> v1(5, 123);
+    Vector<int> v2(v1);
+    ASSERT_EQ(v1.getSize(), v2.getSize());
+    for (auto i = 0u; i < v2.getSize(); ++i)
+    {
+        ASSERT_EQ(v2[i], 123);
     }
 }
 

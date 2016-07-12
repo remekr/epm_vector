@@ -17,7 +17,10 @@ class Vector
     {
         memory = new T[10];
     };
-    Vector(std::initializer_list<T> list);
+    explicit Vector(std::initializer_list<T> list);
+    explicit Vector(size_t n);
+    explicit Vector(size_t n, const T& val);
+    Vector(const Vector& v);
     ~Vector();
 
     void push_back(const T);
@@ -143,6 +146,40 @@ Vector<T>::Vector(std::initializer_list<T> list)
     {
         memory[i++] = e;
     }
+    size = list.size();
+    capacity = list.size();
+}
+
+template <typename T>
+Vector<T>::Vector(size_t n)
+{
+    memory = new T[n];
+    capacity = n;
+    size = 0;
+}
+
+template <typename T>
+Vector<T>::Vector(size_t n, const T& val)
+{
+    memory = new T[n];
+    for (auto i = 0; i < n; ++i)
+    {
+        memory[i] = val;
+    }
+    size = n;
+    capacity = n;
+}
+
+template <typename T>
+Vector<T>::Vector(const Vector& v)
+{
+    size = v.getSize();
+    capacity = v.getCapacity();
+    memory = new T[capacity];
+    for (auto i = 0; i < size; ++i)
+    {
+        memory[i] = v[i];
+    }
 }
 
 template <typename T>
@@ -174,7 +211,7 @@ size_t Vector<T>::getCapacity() const
 template <typename T>
 T& Vector<T>::at(const int index) const
 {
-    if (index < 0 || (index > (size)))
+    if (index < 0 || (index > size))
     {
         throw std::out_of_range("Given index is out of bounds");
     }
