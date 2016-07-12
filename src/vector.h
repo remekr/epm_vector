@@ -4,24 +4,114 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace epam
+namespace epm
 {
 
 template <typename T>
 class Vector
 {
   public:
-    Vector() : capacity(10), size(0) { memory = new T[10]; };
-    ~Vector() { delete[] memory; }
+    Vector()
+        : capacity(10), size(0)
+    {
+        memory = new T[10];
+    };
+    ~Vector()
+    {
+        delete[] memory;
+    }
 
     // modifiers
     void push_back(const T);
     void pop_back();
 
     // getters
-    T& operator[](size_t n) const { return memory[n]; }
+    T& operator[](size_t n) const
+    {
+        return memory[n];
+    }
     T& at(const int index) const;
     T& front() const;
+    T& back() const;
+
+    // iterator
+    typedef T value_type;
+    typedef T& reference;
+    typedef const T& const_reference;
+    typedef T* pointer;
+    typedef const T* const_pointer;
+
+    class base_iterator
+    {
+      public:
+        bool operator!=(const base_iterator& it)
+        {
+            return it.ptr != ptr;
+        }
+        bool operator==(const base_iterator& it)
+        {
+            return it.ptr == ptr;
+        }
+        base_iterator operator++()
+        {
+            ptr++;
+            return *this;
+        }
+        base_iterator operator--(int i)
+        {
+            ptr--;
+            return *this;
+        }
+
+      protected:
+        pointer ptr;
+    };
+    class iterator : public base_iterator
+    {
+      public:
+        iterator(pointer p)
+        {
+            this->ptr = p;
+        }
+        reference operator*()
+        {
+            return *(this->ptr);
+        }
+        pointer operator->()
+        {
+            return this->ptr;
+        }
+    };
+    class const_iterator : public base_iterator
+    {
+      public:
+        const_iterator(pointer p)
+        {
+            this->ptr = p;
+        }
+        const reference operator*() const
+        {
+            return *(this->ptr);
+        }
+        const pointer operator->()
+        {
+            return this->ptr;
+        }
+        const_iterator operator++()
+        {
+            this->ptr++;
+            return *this;
+        }
+        const_iterator operator--(int i)
+        {
+            this->ptr--;
+            return *this;
+        }
+    };
+    iterator begin() const;
+    iterator end() const;
+    const_iterator cbegin() const;
+    const_iterator cend() const;
 
     // capacity
     size_t getSize() const;
@@ -29,11 +119,6 @@ class Vector
     size_t getCapacity() const;
     bool empty() const;
     void reserve(const size_t n);
-
-    // types
-    typedef T value;
-    typedef T& reference;
-    typedef const T& constReference;
 
   private:
     size_t capacity;
@@ -45,7 +130,10 @@ class Vector
 
 // capacity related
 template <typename T>
-size_t Vector<T>::getSize() const { return size; }
+size_t Vector<T>::getSize() const
+{
+    return size;
+}
 
 template <typename T>
 bool Vector<T>::empty() const
@@ -53,7 +141,10 @@ bool Vector<T>::empty() const
     return size == 0 ? true : false;
 }
 template <typename T>
-size_t Vector<T>::getCapacity() const { return capacity; }
+size_t Vector<T>::getCapacity() const
+{
+    return capacity;
+}
 
 template <typename T>
 T& Vector<T>::at(const int index) const
@@ -83,6 +174,7 @@ T& Vector<T>::back() const
 {
     if (size > 0)
     {
+        std::cout << "operator*()";
         return memory[size - 1];
     }
     else
@@ -159,5 +251,29 @@ void Vector<T>::pop_back()
         return;
     else
         --size;
+}
+
+template <typename T>
+typename Vector<T>::iterator Vector<T>::begin() const
+{
+    return iterator(memory);
+}
+
+template <typename T>
+typename Vector<T>::iterator Vector<T>::end() const
+{
+    return iterator(memory + size);
+}
+
+template <typename T>
+typename Vector<T>::const_iterator Vector<T>::cbegin() const
+{
+    return const_iterator(memory);
+}
+
+template <typename T>
+typename Vector<T>::const_iterator Vector<T>::cend() const
+{
+    return const_iterator(memory + size);
 }
 };

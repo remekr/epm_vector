@@ -6,6 +6,7 @@ IndentCaseLabels: false
 ColumnLimit: 0
 Standard: Cpp11
 AllowShortLoopsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None
 PointerBindsToType: true

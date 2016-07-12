@@ -1,7 +1,7 @@
 #include <iostream>
 #include "vector.h"
 
-using namespace epam;
+using namespace epm;
 int main()
 
 {

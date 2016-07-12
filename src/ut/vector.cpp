@@ -2,25 +2,19 @@
 #include "gtest/gtest.h"
 #include "../vector.h"
 
-namespace epam
+namespace epm
 {
 
 class VectorTests : public ::testing::Test
 {
   public:
-    VectorTests(){
-
-    };
+    VectorTests(){};
 
     void SetUp() override{};
 
-    void TearDown() override{
+    void TearDown() override{};
 
-    };
-
-    ~VectorTests(){
-
-    };
+    ~VectorTests(){};
 
     Vector<int> vector;
 };
@@ -30,7 +24,10 @@ TEST_F(VectorTests, IsInitialCapacitySetTo10)
     ASSERT_EQ(vector.getCapacity(), 10);
 }
 
-TEST_F(VectorTests, IsInitialSizeSetTo0) { ASSERT_EQ(vector.getSize(), 0); }
+TEST_F(VectorTests, IsInitialSizeSetTo0)
+{
+    ASSERT_EQ(vector.getSize(), 0);
+}
 
 TEST_F(VectorTests, CheckIfOnePushedElementIsTheOnlyOne)
 {
@@ -138,7 +135,7 @@ TEST_F(VectorTests, CheckIfEmptyReturnsTrueWhenVectorIsResizedToZero)
 
 TEST_F(VectorTests, CheckIfValueTypeIsReturnedProperly)
 {
-    ::testing::StaticAssertTypeEq<float, Vector<float>::value>();
+    ::testing::StaticAssertTypeEq<float, Vector<float>::value_type>();
 }
 
 TEST_F(VectorTests, CheckIfReferenceTypeIsReturnedProperly)
@@ -148,7 +145,7 @@ TEST_F(VectorTests, CheckIfReferenceTypeIsReturnedProperly)
 
 TEST_F(VectorTests, CheckIfConstReferenceTypeIsReturnedProperly)
 {
-    ::testing::StaticAssertTypeEq<const float&, Vector<float>::constReference>();
+    ::testing::StaticAssertTypeEq<const float&, Vector<float>::const_reference>();
 }
 
 TEST_F(VectorTests, CheckIfOneElementIsRemoved)
@@ -216,6 +213,43 @@ TEST_F(VectorTests, CheckIfAtThrowsWhenIndexIsBelowBounds)
 TEST_F(VectorTests, CheckIfAtThrowsWhenIndexIsAboveBounds)
 {
     EXPECT_THROW(vector.at(1), std::out_of_range);
+}
+
+TEST_F(VectorTests, GetIteratorToTheBeginAndCheckItsValue)
+{
+    vector.push_back(11);
+    vector.push_back(11);
+    auto begin = vector.begin();
+    ASSERT_EQ(*begin, 11);
+}
+
+TEST_F(VectorTests, GetIteratorToTheEndAndCheckItsValue)
+{
+    vector.push_back(11);
+    vector.push_back(22);
+    auto end = vector.end();
+    end--;
+    ASSERT_EQ(*end, 22);
+}
+
+TEST_F(VectorTests, TryToUseIteratorsWithForEach)
+{
+    for (auto i = 0; i < 10; ++i)
+        vector.push_back(i);
+    auto i = 0;
+    for (auto num : vector)
+    {
+        ASSERT_EQ(num, i++);
+    }
+}
+
+TEST_F(VectorTests, CheckIfConstIteratorToBeginIsConst)
+{
+    vector.push_back(10);
+    Vector<int>::const_iterator cb = vector.cbegin();
+    //    ASSERT_TRUE(std::is_const<decltype(*cb)>::value);
+    *cb = 15;
+    ASSERT_EQ(vector[0], 15);
 }
 
 int main(int argc, char** argv)

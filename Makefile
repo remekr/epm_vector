@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -std=c++11 -Wall -Werror
 
-all: vector memory format
+all: vector tests memory format
 
 run: vector
 
