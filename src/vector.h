@@ -18,13 +18,12 @@ class Vector
         memory = new T[10];
     };
     Vector(std::initializer_list<T> list);
-    ~Vector()
-    {
-        delete[] memory;
-    }
+    ~Vector();
 
     void push_back(const T);
     void pop_back();
+
+    void clear();
 
     // getters
     T& operator[](size_t n) const;
@@ -141,7 +140,18 @@ Vector<T>::Vector(std::initializer_list<T> list)
     memory = new T[list.size()];
     auto i = 0;
     for (auto e : list)
+    {
         memory[i++] = e;
+    }
+}
+
+template <typename T>
+Vector<T>::~Vector()
+{
+    if (memory != nullptr)
+    {
+        delete[] memory;
+    }
 }
 
 template <typename T>
@@ -164,9 +174,13 @@ size_t Vector<T>::getCapacity() const
 template <typename T>
 T& Vector<T>::at(const int index) const
 {
-    if (index < 0 || (index > size - 1))
+    if (index < 0 || (index > (size)))
     {
         throw std::out_of_range("Given index is out of bounds");
+    }
+    if (size == 0)
+    {
+        throw std::logic_error("Vector is empty!");
     }
     return memory[index];
 }
@@ -295,5 +309,11 @@ template <typename T>
 typename Vector<T>::const_iterator Vector<T>::cend() const
 {
     return const_iterator(memory + size);
+}
+
+template <typename T>
+void Vector<T>::clear()
+{
+    size = 0;
 }
 };

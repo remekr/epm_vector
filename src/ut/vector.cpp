@@ -207,12 +207,23 @@ TEST_F(VectorTests, CheckIfBackReturnsLastElement)
 
 TEST_F(VectorTests, CheckIfAtThrowsWhenIndexIsBelowBounds)
 {
-    EXPECT_THROW(vector.at(-1), std::out_of_range);
+    ASSERT_THROW(vector.at(-1), std::out_of_range);
 }
 
 TEST_F(VectorTests, CheckIfAtThrowsWhenIndexIsAboveBounds)
 {
-    EXPECT_THROW(vector.at(1), std::out_of_range);
+    ASSERT_THROW(vector.at(1), std::out_of_range);
+}
+
+TEST_F(VectorTests, CheckIfAtDoesNotThrowWhenIndexIsOk)
+{
+    vector.push_back(99);
+    ASSERT_NO_THROW(vector.at(0));
+}
+
+TEST_F(VectorTests, CheckIfAtThrowsLogicErrorWhenEmptyAndAtCalled)
+{
+    ASSERT_THROW(vector.at(0), std::logic_error);
 }
 
 TEST_F(VectorTests, GetIteratorToTheBeginAndCheckItsValue)
@@ -262,6 +273,15 @@ TEST_F(VectorTests, ConstructVectorUsingStdInitializersList)
     {
         ASSERT_EQ(*it, i);
     }
+}
+
+TEST_F(VectorTests, CheckIfElementsAreDeletedAfterCallingClear)
+{
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(3);
+    vector.clear();
+    ASSERT_EQ(vector.getSize(), 0);
 }
 
 int main(int argc, char** argv)
