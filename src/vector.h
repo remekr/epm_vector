@@ -27,6 +27,7 @@ class Vector
 
     void push_back(const T&);
     void pop_back();
+    void assign(size_t, const T& value);
 
     void clear();
     void swap(Vector<T>&);
@@ -151,15 +152,14 @@ template <typename T>
 Vector<T>::Vector(std::initializer_list<T> list, const std::allocator<T>& alloc)
 {
     allocator = alloc;
-    memory = allocator.allocate(list.size());
-
+    capacity = list.size() * increasingFactor;
+    memory = allocator.allocate(capacity);
     auto i = 0;
     for (auto e : list)
     {
         memory[i++] = e;
     }
     size = list.size();
-    capacity = list.size();
 }
 
 template <typename T>
@@ -404,6 +404,34 @@ template <typename T>
 void Vector<T>::swap(Vector<T>& other)
 {
     std::swap(memory, other.memory);
+}
+
+template <typename T>
+void Vector<T>::assign(size_t n, const T& value)
+{
+    if (n < capacity)
+    {
+        for (auto i = 0; i < n; ++i)
+        {
+            memory[i] = value;
+        }
+        size = n;
+    }
+    else
+    {
+        for (auto i = size - 1; i >= 0; --i)
+        {
+            allocator.destroy(memory + i);
+        }
+        allocator.deallocate(memory, capacity);
+        capacity = n;
+        size = n;
+        memory = allocator.allocate(capacity);
+        for (auto i = 0; i < n; ++i)
+        {
+            memory[i] = value;
+        }
+    }
 }
 
 template <typename X>

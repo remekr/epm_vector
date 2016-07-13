@@ -399,7 +399,6 @@ TEST_F(VectorTests, SwapContentOfTwoVectors)
 
 TEST_F(VectorTests, SwapContentOfTwoVectorsUsingStdSwap)
 {
-
     Vector<int> v1{1, 2, 3};
     Vector<int> v2{3, 2, 1};
     std::swap(v1, v2);
@@ -422,6 +421,24 @@ TEST_F(VectorTests, CheckIfVectorIsMoveConstructible)
 {
     ASSERT_TRUE(std::is_move_constructible<Vector<int>>());
     ASSERT_TRUE(std::is_move_constructible<Vector<std::string>>());
+}
+
+TEST_F(VectorTests, AssignSomeElementsToExistingVectorAndCheckThem)
+{
+    Vector<double> d{1.0, 2.0, 3.0, 4.0, 5.0};
+    d.assign(8, 3.14);
+    ASSERT_EQ(d.getSize(), 8);
+    ASSERT_EQ(d[0], 3.14);
+    ASSERT_EQ(d[7], 3.14);
+}
+
+TEST_F(VectorTests, AssignMoreThanCapacityElementsToExistingVectorAndCheckThem)
+{
+    Vector<double> d{1.0, 2.0, 3.0, 4.0, 5.0};
+    d.assign(100, 3.14);
+    ASSERT_EQ(d.getSize(), 100);
+    ASSERT_EQ(d[0], 3.14);
+    ASSERT_EQ(d[99], 3.14);
 }
 
 int main(int argc, char** argv)
