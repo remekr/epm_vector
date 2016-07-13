@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <initializer_list>
+#include <memory>
 
 namespace epm
 {
@@ -12,15 +13,15 @@ template <typename T>
 class Vector
 {
   public:
-    Vector()
-        : capacity(10), size(0)
+    Vector(const std::allocator<T> alloc = std::allocator<T>())
+        : capacity(10), size(0), allocator(alloc)
     {
-        memory = new T[10];
+        memory = allocator.allocate(capacity);
     };
-    explicit Vector(std::initializer_list<T> list);
-    explicit Vector(size_t n);
-    explicit Vector(size_t n, const T& val);
-    Vector(const Vector& v);
+    explicit Vector(std::initializer_list<T> list, const std::allocator<T>& alloc = std::allocator<T>());
+    explicit Vector(size_t n, const std::allocator<T>& alloc = std::allocator<T>());
+    explicit Vector(size_t n, const T& val, const std::allocator<T>& alloc = std::allocator<T>());
+    Vector(const Vector& v, const std::allocator<T>& alloc = std::allocator<T>());
     ~Vector();
 
     void push_back(const T);
@@ -138,14 +139,17 @@ class Vector
     size_t capacity;
     int size;
     static const size_t increasingFactor = 2;
+    std::allocator<T> allocator;
 
     T* memory;
 };
 
 template <typename T>
-Vector<T>::Vector(std::initializer_list<T> list)
+Vector<T>::Vector(std::initializer_list<T> list, const std::allocator<T>& alloc)
 {
-    memory = new T[list.size()];
+    allocator = alloc;
+    memory = allocator.allocate(list.size());
+
     auto i = 0;
     for (auto e : list)
     {
@@ -156,17 +160,19 @@ Vector<T>::Vector(std::initializer_list<T> list)
 }
 
 template <typename T>
-Vector<T>::Vector(size_t n)
+Vector<T>::Vector(size_t n, const std::allocator<T>& alloc)
 {
-    memory = new T[n];
+    allocator = alloc;
+    memory = allocator.allocate(n);
     capacity = n;
     size = 0;
 }
 
 template <typename T>
-Vector<T>::Vector(size_t n, const T& val)
+Vector<T>::Vector(size_t n, const T& val, const std::allocator<T>& alloc)
 {
-    memory = new T[n];
+    allocator = alloc;
+    memory = allocator.allocate(n);
     for (auto i = 0; i < n; ++i)
     {
         memory[i] = val;
@@ -176,11 +182,11 @@ Vector<T>::Vector(size_t n, const T& val)
 }
 
 template <typename T>
-Vector<T>::Vector(const Vector& v)
+Vector<T>::Vector(const Vector& v, const std::allocator<T>& alloc)
 {
     size = v.getSize();
     capacity = v.getCapacity();
-    memory = new T[capacity];
+    memory = allocator.allocate(capacity);
     for (auto i = 0; i < size; ++i)
     {
         memory[i] = v[i];
@@ -192,7 +198,7 @@ Vector<T>::~Vector()
 {
     if (memory != nullptr)
     {
-        delete[] memory;
+        allocator.deallocate(memory, capacity);
     }
 }
 
