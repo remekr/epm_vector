@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <type_traits>
 #include "gtest/gtest.h"
 #include "../vector.h"
 
@@ -394,6 +395,33 @@ TEST_F(VectorTests, SwapContentOfTwoVectors)
     ASSERT_EQ(v2[0], 1);
     ASSERT_EQ(v2[1], 2);
     ASSERT_EQ(v2[2], 3);
+}
+
+TEST_F(VectorTests, SwapContentOfTwoVectorsUsingStdSwap)
+{
+
+    Vector<int> v1{1, 2, 3};
+    Vector<int> v2{3, 2, 1};
+    std::swap(v1, v2);
+
+    ASSERT_EQ(v1[0], 3);
+    ASSERT_EQ(v1[1], 2);
+    ASSERT_EQ(v1[2], 1);
+    ASSERT_EQ(v2[0], 1);
+    ASSERT_EQ(v2[1], 2);
+    ASSERT_EQ(v2[2], 3);
+}
+
+TEST_F(VectorTests, CheckIfVectorIsMoveAssignable)
+{
+    ASSERT_TRUE(std::is_move_assignable<Vector<int>>());
+    ASSERT_TRUE(std::is_move_assignable<Vector<std::string>>());
+}
+
+TEST_F(VectorTests, CheckIfVectorIsMoveConstructible)
+{
+    ASSERT_TRUE(std::is_move_constructible<Vector<int>>());
+    ASSERT_TRUE(std::is_move_constructible<Vector<std::string>>());
 }
 
 int main(int argc, char** argv)

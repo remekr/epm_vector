@@ -21,7 +21,8 @@ class Vector
     explicit Vector(std::initializer_list<T> list, const std::allocator<T>& alloc = std::allocator<T>());
     explicit Vector(size_t n, const std::allocator<T>& alloc = std::allocator<T>());
     explicit Vector(size_t n, const T& val, const std::allocator<T>& alloc = std::allocator<T>());
-    Vector(const Vector& v, const std::allocator<T>& alloc = std::allocator<T>());
+    Vector(const Vector<T>& v, const std::allocator<T>& alloc = std::allocator<T>());
+    Vector& operator=(const Vector<T>&);
     ~Vector();
 
     void push_back(const T&);
@@ -184,7 +185,7 @@ Vector<T>::Vector(size_t n, const T& val, const std::allocator<T>& alloc)
 }
 
 template <typename T>
-Vector<T>::Vector(const Vector& v, const std::allocator<T>& alloc)
+Vector<T>::Vector(const Vector<T>& v, const std::allocator<T>& alloc)
 {
     size = v.getSize();
     capacity = v.getCapacity();
@@ -192,6 +193,23 @@ Vector<T>::Vector(const Vector& v, const std::allocator<T>& alloc)
     for (auto i = 0; i < size; ++i)
     {
         memory[i] = v[i];
+    }
+}
+
+template <typename T>
+Vector<T>& Vector<T>::operator=(const Vector<T>& rhs)
+{
+    for (auto i = size - 1; i >= 0; --i)
+    {
+        allocator.destroy(memory + i);
+    }
+    allocator.deallocate(memory, capacity);
+    capacity = rhs.getCapacity();
+    size = rhs.getSize();
+    memory = allocator.allocate(capacity);
+    for (auto i = 0; i < size; ++i)
+    {
+        allocator.construct((memory + i), rhs[i]);
     }
 }
 
