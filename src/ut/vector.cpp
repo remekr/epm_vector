@@ -382,6 +382,20 @@ TEST_F(VectorTests, CheckIfVectorWithDifferentTypesAreEqual_1)
     ASSERT_FALSE(v1 == v2);
 }
 
+TEST_F(VectorTests, SwapContentOfTwoVectors)
+{
+    Vector<int> v1{1, 2, 3};
+    Vector<int> v2{3, 2, 1};
+    v1.swap(v2);
+
+    ASSERT_EQ(v1[0], 3);
+    ASSERT_EQ(v1[1], 2);
+    ASSERT_EQ(v1[2], 1);
+    ASSERT_EQ(v2[0], 1);
+    ASSERT_EQ(v2[1], 2);
+    ASSERT_EQ(v2[2], 3);
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

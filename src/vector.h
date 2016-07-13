@@ -25,10 +25,10 @@ class Vector
     ~Vector();
 
     void push_back(const T&);
-
     void pop_back();
 
     void clear();
+    void swap(Vector<T>&);
 
     // getters
     T& operator[](size_t n) const;
@@ -136,12 +136,13 @@ class Vector
     template <typename X, typename Y>
     friend bool operator!=(const Vector<X>& v1, const Vector<Y>& v2);
 
+    std::allocator<T> get_allocator() const;
+
   private:
     size_t capacity;
     int size;
     static const size_t increasingFactor = 2;
     std::allocator<T> allocator;
-
     T* memory;
 };
 
@@ -373,6 +374,18 @@ template <typename T>
 void Vector<T>::clear()
 {
     size = 0;
+}
+
+template <typename T>
+std::allocator<T> Vector<T>::get_allocator() const
+{
+    return allocator;
+}
+
+template <typename T>
+void Vector<T>::swap(Vector<T>& other)
+{
+    std::swap(memory, other.memory);
 }
 
 template <typename X>
