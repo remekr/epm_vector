@@ -24,7 +24,8 @@ class Vector
     Vector(const Vector& v, const std::allocator<T>& alloc = std::allocator<T>());
     ~Vector();
 
-    void push_back(const T);
+    void push_back(const T&);
+
     void pop_back();
 
     void clear();
@@ -198,6 +199,10 @@ Vector<T>::~Vector()
 {
     if (memory != nullptr)
     {
+        for (auto i = size - 1; i >= 0; --i)
+        {
+            allocator.destroy(memory + i);
+        }
         allocator.deallocate(memory, capacity);
     }
 }
@@ -278,7 +283,7 @@ void Vector<T>::resize(const size_t n)
         {
             for (auto i = n; i < size; ++i)
             {
-                delete (memory + i);
+                allocator.deallocate(memory + i, 1);
             }
             size = n;
             capacity = n;
@@ -292,12 +297,12 @@ void Vector<T>::resize(const size_t n)
     }
     else
     {
-        auto newMemory = new T[n];
+        auto newMemory = allocator.allocate(n);
         for (auto i = 0u; i < size; ++i)
         {
             newMemory[i] = memory[i];
         }
-        delete[] memory;
+        allocator.deallocate(memory, capacity);
         memory = newMemory;
         capacity = n;
     }
@@ -308,31 +313,36 @@ void Vector<T>::resize(const size_t n)
 }
 
 template <typename T>
-void Vector<T>::push_back(const T element)
+void Vector<T>::push_back(const T& element)
 {
     if (capacity > size)
     {
-        memory[size++] = element;
+        allocator.construct((memory + size), element);
     }
     else
     {
-        auto newMemory = new T[increasingFactor * capacity];
+        auto newMemory = allocator.allocate(increasingFactor * capacity);
         for (auto i = 0u; i < size; ++i)
         {
             newMemory[i] = memory[i];
         }
         capacity = increasingFactor * capacity;
-        memory[size++] = element;
+        allocator.construct((memory + size), element);
     }
+    ++size;
 }
 
 template <typename T>
 void Vector<T>::pop_back()
 {
     if (size == 0)
+    {
         return;
+    }
     else
+    {
         --size;
+    }
 }
 
 template <typename T>

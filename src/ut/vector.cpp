@@ -279,12 +279,11 @@ TEST_F(VectorTests, ConstructUsingStdInitializersList)
 
 TEST_F(VectorTests, ConstructVectorOfStrings)
 {
-    /*  Vector<std::string> v;
+    Vector<std::string> v;
     v.push_back(std::string("1"));
     v.push_back(std::string("2"));
-
     ASSERT_EQ(v[0], "1");
-    ASSERT_EQ(v[1], "2"); */
+    ASSERT_EQ(v[1], "2");
 }
 
 TEST_F(VectorTests, ConstructUsingStdInitializersListAndReadByOrdinaryFor)
