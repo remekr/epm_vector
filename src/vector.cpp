@@ -1,5 +1,5 @@
 #include "vector.h"
 
-namespace epam
+namespace epm
 {
 }

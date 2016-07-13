@@ -129,6 +129,11 @@ class Vector
     bool empty() const;
     void reserve(const size_t n);
 
+    template <typename X, typename Y>
+    friend bool operator==(const Vector<X>& v1, const Vector<Y>& v2);
+    template <typename X, typename Y>
+    friend bool operator!=(const Vector<X>& v1, const Vector<Y>& v2);
+
   private:
     size_t capacity;
     int size;
@@ -352,5 +357,52 @@ template <typename T>
 void Vector<T>::clear()
 {
     size = 0;
+}
+
+template <typename X>
+bool operator==(const Vector<X>& v1, const Vector<X>& v2)
+{
+    auto eq = true;
+    if (v1.getSize() != v2.getSize())
+    {
+        return false;
+    }
+    for (auto i = 0; i < v1.getSize(); ++i)
+    {
+        if (v1[i] != v2[i])
+        {
+            eq = false;
+        }
+    }
+    return eq;
+}
+
+template <typename X>
+bool operator!=(const Vector<X>& v1, const Vector<X>& v2)
+{
+    if (v1.getSize() != v2.getSize())
+    {
+        return true;
+    }
+    for (auto i = 0; i < v1.getSize(); ++i)
+    {
+        if (v1[i] != v2[i])
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+template <typename X, typename Y>
+bool operator!=(const Vector<X>& v1, const Vector<Y>& v2)
+{
+    return true;
+}
+
+template <typename X, typename Y>
+bool operator==(const Vector<X>& v1, const Vector<Y>& v2)
+{
+    return false;
 }
 };

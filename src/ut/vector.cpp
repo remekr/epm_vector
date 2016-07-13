@@ -327,6 +327,62 @@ TEST_F(VectorTests, CheckIfElementsAreDeletedAfterCallingClear)
     ASSERT_EQ(vector.getSize(), 0);
 }
 
+TEST_F(VectorTests, CheckIfTwoEqualVectorsAreConsideredAsEqual)
+{
+    Vector<int> v1{1, 2, 3};
+    Vector<int> v2{1, 2, 3};
+    ASSERT_TRUE(v1 == v2);
+}
+
+TEST_F(VectorTests, CheckIfTwoNotEqualVectorsAreConsideredAsNotEqual)
+{
+    Vector<int> v1{1, 2, 3};
+    Vector<int> v2{1, 2, 4};
+    ASSERT_FALSE(v1 == v2);
+}
+
+TEST_F(VectorTests, CheckIfTwoEqualVectorsAreConsideredAsEqual_1)
+{
+    Vector<int> v1{1, 2, 3};
+    Vector<int> v2{1, 2, 3};
+    ASSERT_FALSE(v1 != v2);
+}
+
+TEST_F(VectorTests, CheckIfTwoNotEqualVectorsAreConsideredAsNotEqual_1)
+{
+    Vector<int> v1{1, 2, 3};
+    Vector<int> v2{1, 2, 4};
+    ASSERT_TRUE(v1 != v2);
+}
+
+TEST_F(VectorTests, CheckIfVectorWithDifferentSizesAreNotEqual)
+{
+    Vector<int> v1{1, 2, 3, 4};
+    Vector<int> v2{1, 2, 3};
+    ASSERT_FALSE(v1 == v2);
+}
+
+TEST_F(VectorTests, CheckIfVectorWithDifferentSizesAreNotEqual_1)
+{
+    Vector<int> v1{1, 2, 3, 4};
+    Vector<int> v2{1, 2, 3};
+    ASSERT_TRUE(v1 != v2);
+}
+
+TEST_F(VectorTests, CheckIfVectorWithDifferentTypesAreEqual)
+{
+    Vector<int> v1{1, 2, 3};
+    Vector<float> v2{1.0, 2.0, 3.0};
+    ASSERT_TRUE(v1 != v2);
+}
+
+TEST_F(VectorTests, CheckIfVectorWithDifferentTypesAreEqual_1)
+{
+    Vector<int> v1{1, 2, 3, 4};
+    Vector<float> v2{1.0, 2.0, 3.0};
+    ASSERT_FALSE(v1 == v2);
+}
+
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
