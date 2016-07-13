@@ -28,6 +28,7 @@ class Vector
     void push_back(const T&);
     void pop_back();
     void assign(size_t, const T& value);
+    void assign(std::initializer_list<T>);
 
     void clear();
     void swap(Vector<T>&);
@@ -141,6 +142,9 @@ class Vector
     std::allocator<T> get_allocator() const;
 
   private:
+    void fill(size_t n, const T& value);
+    void reallocate(size_t newCapacity);
+
     size_t capacity;
     int size;
     static const size_t increasingFactor = 2;
@@ -411,27 +415,61 @@ void Vector<T>::assign(size_t n, const T& value)
 {
     if (n < capacity)
     {
-        for (auto i = 0; i < n; ++i)
+        fill(n, value);
+    }
+    else
+    {
+        reallocate(n);
+        fill(n, value);
+    }
+}
+
+template <typename T>
+void Vector<T>::assign(std::initializer_list<T> list)
+{
+    std::cout << "ASSIGN \n";
+    auto n = list.size();
+    if (n < capacity)
+    {
+        auto i = 0;
+        for (auto e : list)
         {
-            memory[i] = value;
+            memory[i++] = e;
         }
         size = n;
     }
     else
     {
-        for (auto i = size - 1; i >= 0; --i)
+        reallocate(n);
+        auto i = 0;
+        for (auto e : list)
         {
-            allocator.destroy(memory + i);
+            memory[i++] = e;
         }
-        allocator.deallocate(memory, capacity);
-        capacity = n;
         size = n;
-        memory = allocator.allocate(capacity);
-        for (auto i = 0; i < n; ++i)
-        {
-            memory[i] = value;
-        }
     }
+}
+
+template <typename T>
+void Vector<T>::reallocate(size_t n)
+{
+    for (auto i = size - 1; i >= 0; --i)
+    {
+        allocator.destroy(memory + i);
+    }
+    allocator.deallocate(memory, capacity);
+    capacity = n;
+    memory = allocator.allocate(capacity);
+}
+
+template <typename T>
+void Vector<T>::fill(size_t n, const T& value)
+{
+    for (auto i = 0; i < n; ++i)
+    {
+        memory[i] = value;
+    }
+    size = n;
 }
 
 template <typename X>
