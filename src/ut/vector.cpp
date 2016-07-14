@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <type_traits>
+#include <memory>
 #include "gtest/gtest.h"
 #include "../vector.h"
 
@@ -19,6 +20,12 @@ class VectorTests : public ::testing::Test
     ~VectorTests(){};
 
     Vector<int> vector;
+
+    Vector<double> getDoubles()
+    {
+        Vector<double> d{1.0, 2.0, 3.0, 4.0, 5.0};
+        return d;
+    }
 };
 
 TEST_F(VectorTests, IsInitialCapacitySetTo10)
@@ -457,6 +464,23 @@ TEST_F(VectorTests, AssignMoreThanCapacityElementsUsingStdInitializerList)
     ASSERT_EQ(d.getSize(), 12);
     ASSERT_EQ(d[0], 6.0);
     ASSERT_EQ(d[11], 17.0);
+}
+
+TEST_F(VectorTests, CreateVectorUsingCopyMoveConstructor)
+{
+    Vector<double> e{1.0, 2.0, 3.0, 4.0, 5.0};
+    Vector<double> d = e;
+    ASSERT_EQ(d.getSize(), 5);
+    ASSERT_EQ(d[0], 1.0);
+    ASSERT_EQ(d[4], 5.0);
+}
+
+TEST_F(VectorTests, CreateVectorUsingCopyMoveConstructor_1)
+{
+    Vector<double> e = std::move(getDoubles());
+    ASSERT_EQ(e.getSize(), 5);
+    ASSERT_EQ(e[0], 1.0);
+    ASSERT_EQ(e[4], 5.0);
 }
 
 int main(int argc, char** argv)

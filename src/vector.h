@@ -13,16 +13,18 @@ template <typename T>
 class Vector
 {
   public:
-    Vector(const std::allocator<T> alloc = std::allocator<T>())
+    explicit Vector(const std::allocator<T>& alloc = std::allocator<T>())
         : capacity(10), size(0), allocator(alloc)
     {
         memory = allocator.allocate(capacity);
     };
-    explicit Vector(std::initializer_list<T> list, const std::allocator<T>& alloc = std::allocator<T>());
+    Vector(std::initializer_list<T> list, const std::allocator<T>& alloc = std::allocator<T>());
     explicit Vector(size_t n, const std::allocator<T>& alloc = std::allocator<T>());
-    explicit Vector(size_t n, const T& val, const std::allocator<T>& alloc = std::allocator<T>());
-    Vector(const Vector<T>& v, const std::allocator<T>& alloc = std::allocator<T>());
+    Vector(size_t n, const T& val, const std::allocator<T>& alloc = std::allocator<T>());
+    Vector(const Vector<T>&, const std::allocator<T>& alloc = std::allocator<T>());
+    Vector(Vector<T>&& v, const std::allocator<T>& alloc = std::allocator<T>());
     Vector& operator=(const Vector<T>&);
+    Vector& operator=(Vector<T>&&);
     ~Vector();
 
     void push_back(const T&);
@@ -127,7 +129,6 @@ class Vector
     const_iterator cbegin() const;
     const_iterator cend() const;
 
-    // capacity
     size_t getSize() const;
     void resize(const size_t n);
     size_t getCapacity() const;
@@ -191,6 +192,7 @@ Vector<T>::Vector(size_t n, const T& val, const std::allocator<T>& alloc)
 template <typename T>
 Vector<T>::Vector(const Vector<T>& v, const std::allocator<T>& alloc)
 {
+    allocator = alloc;
     size = v.getSize();
     capacity = v.getCapacity();
     memory = allocator.allocate(capacity);
@@ -198,6 +200,26 @@ Vector<T>::Vector(const Vector<T>& v, const std::allocator<T>& alloc)
     {
         memory[i] = v[i];
     }
+}
+
+template <typename T>
+Vector<T>::Vector(Vector<T>&& v, const std::allocator<T>& alloc)
+{
+    allocator = alloc;
+    size = v.getSize();
+    capacity = v.getCapacity();
+    memory = v.memory;
+    v.memory = nullptr;
+}
+
+template <typename T>
+Vector<T>& Vector<T>::operator=(Vector<T>&& v)
+{
+    std::cout << "\nASSIGNMENT MOVE\n";
+    size = v.getSize();
+    capacity = v.getCapacity();
+    memory = v.memory;
+    v.memory = nullptr;
 }
 
 template <typename T>
@@ -427,7 +449,6 @@ void Vector<T>::assign(size_t n, const T& value)
 template <typename T>
 void Vector<T>::assign(std::initializer_list<T> list)
 {
-    std::cout << "ASSIGN \n";
     auto n = list.size();
     if (n < capacity)
     {
