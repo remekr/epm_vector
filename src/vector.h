@@ -21,7 +21,7 @@ class Vector
     Vector(std::initializer_list<T> list, const std::allocator<T>& alloc = std::allocator<T>());
     explicit Vector(size_t n, const std::allocator<T>& alloc = std::allocator<T>());
     Vector(size_t n, const T& val, const std::allocator<T>& alloc = std::allocator<T>());
-    Vector(const Vector<T>&, const std::allocator<T>& alloc = std::allocator<T>());
+    Vector(const Vector<T>&);
     Vector(Vector<T>&& v, const std::allocator<T>& alloc = std::allocator<T>());
     Vector& operator=(const Vector<T>&);
     Vector& operator=(Vector<T>&&);
@@ -31,6 +31,8 @@ class Vector
     void pop_back();
     void assign(size_t, const T& value);
     void assign(std::initializer_list<T>);
+    template <class... Args>
+    void emplace_back(Args&&... args);
 
     void clear();
     void swap(Vector<T>&);
@@ -190,11 +192,11 @@ Vector<T>::Vector(size_t n, const T& val, const std::allocator<T>& alloc)
 }
 
 template <typename T>
-Vector<T>::Vector(const Vector<T>& v, const std::allocator<T>& alloc)
+Vector<T>::Vector(const Vector<T>& v)
 {
-    allocator = alloc;
     size = v.getSize();
     capacity = v.getCapacity();
+    allocator = v.get_allocator();
     memory = allocator.allocate(capacity);
     for (auto i = 0; i < size; ++i)
     {
@@ -208,6 +210,7 @@ Vector<T>::Vector(Vector<T>&& v, const std::allocator<T>& alloc)
     allocator = alloc;
     size = v.getSize();
     capacity = v.getCapacity();
+    allocator = v.get_allocator();
     memory = v.memory;
     v.memory = nullptr;
 }
@@ -215,9 +218,9 @@ Vector<T>::Vector(Vector<T>&& v, const std::allocator<T>& alloc)
 template <typename T>
 Vector<T>& Vector<T>::operator=(Vector<T>&& v)
 {
-    std::cout << "\nASSIGNMENT MOVE\n";
     size = v.getSize();
     capacity = v.getCapacity();
+    allocator = v.get_allocator();
     memory = v.memory;
     v.memory = nullptr;
 }
@@ -232,6 +235,7 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& rhs)
     allocator.deallocate(memory, capacity);
     capacity = rhs.getCapacity();
     size = rhs.getSize();
+    allocator = rhs.get_allocator();
     memory = allocator.allocate(capacity);
     for (auto i = 0; i < size; ++i)
     {
@@ -375,6 +379,12 @@ void Vector<T>::push_back(const T& element)
         allocator.construct((memory + size), element);
     }
     ++size;
+}
+
+template <typename T>
+template <class... Args>
+void Vector<T>::emplace_back(Args&&... args)
+{
 }
 
 template <typename T>
